@@ -35,14 +35,11 @@ namespace WishList.Controllers
                 return View(model);
             }
 
-            var appUser = new ApplicationUser
+            var result = _userManager.CreateAsync(new ApplicationUser
             {
                 UserName = model.Email,
                 Email = model.Email,
-                PasswordHash = model.Password,
-            };
-
-            var result = _userManager.CreateAsync(appUser).Result;
+            }, model.Password).Result;
 
             if (!result.Succeeded)
             {
