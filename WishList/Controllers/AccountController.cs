@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WishList.Models;
+using WishList.Models.AccountViewModels;
 
 namespace WishList.Controllers
 {
@@ -18,9 +20,41 @@ namespace WishList.Controllers
         }
 
 
-        public IActionResult Index()
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Register()
         {
-            return View();
+            return View("Register");
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Register", registerViewModel);
+            }
+
+            var appUser = new ApplicationUser
+            {
+                UserName = registerViewModel.Email,
+                Email = registerViewModel.Email,
+                PasswordHash = registerViewModel.Password,
+            };
+
+            var result = await _userManager.CreateAsync(appUser);
+
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("Password", error.Description);
+                    return View("Register", registerViewModel);
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }
