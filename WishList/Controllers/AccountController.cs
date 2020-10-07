@@ -9,7 +9,7 @@ namespace WishList.Controllers
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _usermanager;
-        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
         public AccountController(UserManager<ApplicationUser> usermanager, SignInManager<ApplicationUser> signInManager)
         {
